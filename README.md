@@ -1,8 +1,8 @@
 # papersplease
 
-A simple web file viewer walks directory
+manual labelling tool
 
-## Installation
+## Installation (TODO; not working currently)
 
 A current version of the Deno CLI is required to install and host
 `papersplease`. To install, run the following command:
