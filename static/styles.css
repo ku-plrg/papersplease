@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+pre.shiki {
+  padding: 16px 24px;
+  border-radius: 8px;
+}
+
+body {
+  background-color: #09090b;
+  color: #f8fafc;
+}
+
+details[open] > summary {
+  background-color: theme('colors.muted');
+}
+
+code {
+  counter-reset: step;
+  counter-increment: step 0;
+}
+
+code .line::before {
+  content: counter(step);
+  counter-increment: step;
+  width: 1rem;
+  margin-right: 1.5rem;
+  display: inline-block;
+  text-align: right;
+  color: rgba(115,138,148,.4)
+}
