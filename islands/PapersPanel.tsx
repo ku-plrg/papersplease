@@ -12,16 +12,20 @@ export default function PapersPanel(props: JSX.HTMLAttributes<HTMLDivElement>) {
   return (
     <Card class={join("p-4 flex flex-col gap-4", props.class)}>
       <div>
-        <Checkbox onClick={() => autoNextOption.value = !autoNextOption.value}>
+        <Checkbox
+          onInput={() => autoNextOption.value = !autoNextOption.value}
+        >
           Go next after label
         </Checkbox>
       </div>
       <div class="grid grid-flow-col gap-4">
-        <PaperButton disabled={disabled} size="lg" variant="destructive">
+        <PaperButton disabled={disabled} size="lg" variant="bug">
           Bug (Q)
         </PaperButton>
-        <PaperButton disabled={disabled} size="lg">Pass (W)</PaperButton>
-        <PaperButton disabled={disabled} size="lg" variant="outline">
+        <PaperButton disabled={disabled} size="lg" variant="pass">
+          Pass (W)
+        </PaperButton>
+        <PaperButton disabled={disabled} size="lg" variant="idk">
           I don't know (E)
         </PaperButton>
       </div>

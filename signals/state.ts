@@ -59,5 +59,6 @@ export function setLabel(label: "bug" | "pass" | "idk") {
     ...labelled.value,
     [currentFile.value]: label,
   };
+  console.log(autoNextOption.value);
   if (autoNextOption.value) goNext();
 }

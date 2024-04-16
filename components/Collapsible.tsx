@@ -14,7 +14,7 @@ export default function Collapsible(
   const open = useComputed(() => cursorKey.value === keyName);
   return (
     <details {...props} open={open} onToggle={onToggle}>
-      <summary class="hover:bg-muted p-2 px-3 rounded-md cursor-pointer flex justify-between">
+      <summary class="hover:bg-muted p-2 px-3 rounded-md cursor-pointer flex justify-between sticky top-0">
         <p class="break-all">
           {summary}
         </p>

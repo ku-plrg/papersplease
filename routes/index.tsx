@@ -12,10 +12,12 @@ export default function Home() {
         <Header />
         <div class="w-full h-full grid grid-cols-[3fr,6fr] gap-4 min-h-0">
           <PrimaryPanel />
-          <div class="flex flex-col gap-4">
-            <div class="h-full grid grid-flow-row gap-4">
+          <div class="flex flex-col gap-4 min-h-0">
+            <div class="h-full grid grid-flow-row gap-4 min-h-0">
               <Panel filename="minified.js" />
               <Panel filename="original.js" />
+              <Panel filename="injected.js" />
+              <Panel filename="reason" />
             </div>
             <PapersPanel class="self-end" />
           </div>
