@@ -1,0 +1,33 @@
+{
+  "type": "category",
+  "category": {
+    "some category 1": [
+      "./dir1",
+      "./dir2",
+      "./dir3"
+    ],
+    "some category 2": [
+      "./dir4",
+      "./dir5"
+    ]
+  },
+  "files": [
+    [
+      "a.txt",
+      {
+        "type": "plaintext"
+      }
+    ],
+    [
+      "b.txt",
+      {
+        "type": "plaintext"
+      }
+    ]
+  ],
+  "labels": [
+    "bug1",
+    "bug2",
+    "bug3"
+  ]
+}
