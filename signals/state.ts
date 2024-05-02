@@ -17,6 +17,11 @@ const INIT_MANIFEST = {
 } satisfies Manifest;
 export const manifest = signal<Manifest>(INIT_MANIFEST);
 export const viewFiles = computed<FileView[]>(() => manifest.value.files);
+export const manifestLabels = computed<string[]>(() => manifest.value.labels);
+export const addedLabels = signal<string[]>([]);
+export const labels = computed<string[]>(
+  () => [...manifestLabels.value, ...addedLabels.value],
+);
 
 export const entryKeys = computed(() => Object.keys(manifest.value.category));
 export const entryFiles = computed(() =>
@@ -71,12 +76,11 @@ export function goNext() {
   );
 }
 
-export function setLabel(label: "bug" | "pass" | "idk") {
+export function setLabel(label: string) {
   if (currentFile.value == null) return;
   labelled.value = {
     ...labelled.value,
     [currentFile.value]: label,
   };
-  console.log(autoNextOption.value);
   if (autoNextOption.value) goNext();
 }

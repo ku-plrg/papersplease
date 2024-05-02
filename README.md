@@ -2,6 +2,11 @@
 
 manual labelling tool
 
+## Run example
+
+1. `cd ./example && deno run -A --watch=../routes/,../static ../dev.ts`
+2. Click `Upload manifest` button and select `./example/manifest.json`
+
 ## Installation (TODO; not working currently)
 
 A current version of the Deno CLI is required to install and host

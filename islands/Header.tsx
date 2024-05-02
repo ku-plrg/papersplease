@@ -1,19 +1,23 @@
 import Card from "~/components/Card.tsx";
 import { Download, Upload } from "lucide-preact";
-import { labelled, labelMap, manifest } from "~/signals/state.ts";
+import { labelled, labelMap, labels, manifest } from "~/signals/state.ts";
 import { entryFiles } from "~/signals/state.ts";
 
 export default function Header() {
   return (
     <Card>
-      <div class="w-full flex justify-between">
-        <div>
-          bug ({labelMap.value.bug?.length ?? 0}) / pass
-          ({labelMap.value.pass?.length ?? 0}) / idk
-          ({labelMap.value.idk?.length ?? 0}) / unresolved
-          ({entryFiles.value.length - Object.keys(
-            labelled.value,
-          ).length})
+      <div class="w-full flex items-center justify-between">
+        <div class="flex items-center">
+          {labels.value.map((label) => (
+            <div class="border-r border-border px-2" key={label}>
+              {label} ({labelMap.value[label]?.length ?? 0})
+            </div>
+          ))}
+          <div class="px-2">
+            unresolved ({entryFiles.value.length - Object.keys(
+              labelled.value,
+            ).length})
+          </div>
         </div>
         <div class="flex gap-4">
           <div

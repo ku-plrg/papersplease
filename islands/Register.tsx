@@ -1,5 +1,5 @@
 import { useSignalEffect } from "@preact/signals";
-import { setLabel } from "~/signals/state.ts";
+import { labels, setLabel } from "~/signals/state.ts";
 import { labelled } from "~/signals/state.ts";
 import { currentFile, cursorKeyIdx } from "~/signals/state.ts";
 import { goNext, goPrev } from "~/signals/state.ts";
@@ -24,11 +24,13 @@ export function Register() {
       if (currentFile.value == null) return;
       switch (ev.key) {
         case "q":
-          return setLabel("bug");
+          return labels.value[0] && setLabel(labels.value[0]);
         case "w":
-          return setLabel("pass");
+          return labels.value[1] && setLabel(labels.value[1]);
         case "e":
-          return setLabel("idk");
+          return labels.value[2] && setLabel(labels.value[2]);
+        case "r":
+          return labels.value[3] && setLabel(labels.value[3]);
       }
     }
   });
