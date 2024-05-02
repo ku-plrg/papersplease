@@ -11,6 +11,7 @@ import * as $PapersPanel from "./islands/PapersPanel.tsx";
 import * as $PrimaryPanel from "./islands/PrimaryPanel.tsx";
 import * as $Register from "./islands/Register.tsx";
 import * as $ViewPanel from "./islands/ViewPanel.tsx";
+import * as $ViewSection from "./islands/ViewSection.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -26,6 +27,7 @@ const manifest = {
     "./islands/PrimaryPanel.tsx": $PrimaryPanel,
     "./islands/Register.tsx": $Register,
     "./islands/ViewPanel.tsx": $ViewPanel,
+    "./islands/ViewSection.tsx": $ViewSection,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

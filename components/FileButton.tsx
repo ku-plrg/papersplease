@@ -24,7 +24,7 @@ export default function FileButton({ entry, idx }: FileButtonProps) {
         "w-full flex items-center justify-between",
         flag.value ? "text-foreground" : "text-muted-foreground",
       )}
-      onToggle={() => cursorIdx.value = idx}
+      onClick={() => cursorIdx.value = idx}
     >
       <p>{flag.value ? <b>{entry}</b> : entry}</p>
       {label.value && (

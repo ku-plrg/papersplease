@@ -1,14 +1,32 @@
 import { computed, effect, signal } from "@preact/signals";
 import { autoNextOption } from "./option.ts";
 
-export const manifest = signal<Record<string, string[]>>({});
-export const entryKeys = computed(() => Object.keys(manifest.value));
-export const entryFiles = computed(() => Object.values(manifest.value).flat());
+export type FileType = "plaintext" | "javascript";
+type FileView = [string, { type: FileType }];
+interface Manifest {
+  type: "category";
+  category: Record<string, string[]>;
+  files: FileView[];
+  labels: string[];
+}
+const INIT_MANIFEST = {
+  type: "category",
+  category: {},
+  files: [],
+  labels: [],
+} satisfies Manifest;
+export const manifest = signal<Manifest>(INIT_MANIFEST);
+export const viewFiles = computed<FileView[]>(() => manifest.value.files);
+
+export const entryKeys = computed(() => Object.keys(manifest.value.category));
+export const entryFiles = computed(() =>
+  Object.values(manifest.value.category).flat()
+);
 
 export const cursorKey = signal<string | undefined>(undefined);
 export const cursorIdx = signal<number | undefined>(undefined);
 export const cursorFiles = computed<string[]>(() =>
-  cursorKey.value != null ? manifest.value[cursorKey.value] : []
+  cursorKey.value != null ? manifest.value.category[cursorKey.value] : []
 );
 export const cursorKeyIdx = computed<number | undefined>(() =>
   entryKeys.value.findIndex((key) => key === cursorKey.value)

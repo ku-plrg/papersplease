@@ -1,13 +1,14 @@
 import { type Signal, useSignal, useSignalEffect } from "@preact/signals";
 import { codeToHtml } from "shiki";
-import { currentFile } from "../signals/state.ts";
+import { currentFile, FileType } from "~/signals/state.ts";
 import Card from "~/components/Card.tsx";
 
 interface PanelProps {
   filename: string;
+  lang: FileType;
 }
 
-export default function Panel({ filename }: PanelProps) {
+export default function ViewPanel({ filename, lang }: PanelProps) {
   const body = useSignal("");
   useSignalEffect(() =>
     void (async () => {
@@ -18,7 +19,7 @@ export default function Panel({ filename }: PanelProps) {
       if (res.ok) {
         const json = await res.json();
         body.value = await codeToHtml(json.text, {
-          lang: "javascript",
+          lang,
           theme: "vitesse-black",
         });
       }

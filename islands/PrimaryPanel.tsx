@@ -8,7 +8,7 @@ import { cursorKey } from "~/signals/state.ts";
 export default function PrimaryPanel() {
   return (
     <Card class="h-full *:border-b *:border-border last:border-none">
-      {Object.entries(manifest.value).map(([key, entries]) => (
+      {Object.entries(manifest.value.category).map(([key, entries]) => (
         <Collapsible
           name="file-entries"
           key={key}
