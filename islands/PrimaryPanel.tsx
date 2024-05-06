@@ -1,4 +1,3 @@
-import { useSignalEffect } from "@preact/signals";
 import { manifest } from "~/signals/state.ts";
 import FileButton from "~/components/FileButton.tsx";
 import Collapsible from "~/components/Collapsible.tsx";

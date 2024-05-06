@@ -1,9 +1,12 @@
 import { cva, type VariantProps } from "class-variance-authority";
+import type { ComponentChildren } from "preact";
 
-interface StoplightProps extends VariantProps<typeof stoplightVariants> {}
+interface StoplightProps extends VariantProps<typeof stoplightVariants> {
+  children: ComponentChildren;
+}
 
 const stoplightVariants = cva(
-  "rounded-full w-3 h-3",
+  "rounded-lg px-1 text-sm",
   {
     variants: {
       variant: {
@@ -16,6 +19,6 @@ const stoplightVariants = cva(
   },
 );
 
-export default function Stoplight({ variant }: StoplightProps) {
-  return <div class={stoplightVariants({ variant })} />;
+export default function Stoplight({ variant, children }: StoplightProps) {
+  return <div class={stoplightVariants({ variant })}>{children}</div>;
 }

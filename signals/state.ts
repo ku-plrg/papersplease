@@ -19,9 +19,7 @@ export const manifest = signal<Manifest>(INIT_MANIFEST);
 export const viewFiles = computed<FileView[]>(() => manifest.value.files);
 export const manifestLabels = computed<string[]>(() => manifest.value.labels);
 export const addedLabels = signal<string[]>([]);
-export const labels = computed<string[]>(
-  () => [...manifestLabels.value, ...addedLabels.value],
-);
+export const labels = computed<string[]>(() => Object.keys(labelMap.value));
 
 export const entryKeys = computed(() => Object.keys(manifest.value.category));
 export const entryFiles = computed(() =>
@@ -43,7 +41,11 @@ export const currentFile = computed(() =>
 
 export const labelled = signal<Record<string, string>>({});
 export const labelMap = computed(() =>
-  Object.groupBy(Object.entries(labelled.value), ([_, label]) => label)
+  Object.fromEntries(
+    Object.entries(
+      Object.groupBy(Object.entries(labelled.value), ([_, label]) => label),
+    ).map(([key, vs]) => [key, vs?.map((p) => p[0])]),
+  )
 );
 
 effect(() => {

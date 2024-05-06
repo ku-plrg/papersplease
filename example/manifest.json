@@ -24,10 +24,5 @@
         "type": "plaintext"
       }
     ]
-  ],
-  "labels": [
-    "bug1",
-    "bug2",
-    "bug3"
   ]
 }

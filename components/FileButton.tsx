@@ -28,7 +28,9 @@ export default function FileButton({ entry, idx }: FileButtonProps) {
     >
       <p>{flag.value ? <b>{entry}</b> : entry}</p>
       {label.value && (
-        <Stoplight variant={label.value as "bug" | "idk" | "pass" /* TODO */} />
+        <Stoplight variant={label.value as "bug" | "idk" | "pass" /* TODO */}>
+          {label.value}
+        </Stoplight>
       )}
     </button>
   );

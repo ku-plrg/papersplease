@@ -9,6 +9,7 @@ export function Register() {
     document.addEventListener("keydown", listener);
     return () => document.removeEventListener("keydown", listener);
     function listener(ev: KeyboardEvent) {
+      if (document.activeElement?.tagName == "INPUT") return;
       switch (ev.key) {
         case "ArrowLeft":
           return goPrev();
@@ -22,6 +23,7 @@ export function Register() {
     return () => document.removeEventListener("keydown", listener);
     function listener(ev: KeyboardEvent) {
       if (currentFile.value == null) return;
+      if (document.activeElement?.tagName == "INPUT") return;
       switch (ev.key) {
         case "q":
           return labels.value[0] && setLabel(labels.value[0]);

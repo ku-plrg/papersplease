@@ -2,7 +2,7 @@ import type { JSX } from "preact";
 import { PaperButton } from "../components/PaperButton.tsx";
 import Card from "~/components/Card.tsx";
 import { join } from "~/utils/class-join.ts";
-import { addedLabels, currentFile, labels, manifest } from "~/signals/state.ts";
+import { addedLabels, currentFile, labels, setLabel } from "~/signals/state.ts";
 import { useComputed, useSignal } from "@preact/signals";
 import Checkbox from "~/components/Checkbox.tsx";
 import { autoNextOption } from "~/signals/option.ts";
@@ -41,7 +41,13 @@ export default function PapersPanel(props: JSX.HTMLAttributes<HTMLDivElement>) {
       </div>
       <div class="flex flex-wrap gap-4">
         {labels.value.map((label) => (
-          <PaperButton key={label} disabled={disabled} size="lg" variant="bug">
+          <PaperButton
+            key={label}
+            disabled={disabled}
+            size="lg"
+            variant="bug"
+            onClick={() => setLabel(label)}
+          >
             {label}
           </PaperButton>
         ))}

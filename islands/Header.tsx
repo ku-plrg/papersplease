@@ -2,12 +2,13 @@ import Card from "~/components/Card.tsx";
 import { Download, Upload } from "lucide-preact";
 import { labelled, labelMap, labels, manifest } from "~/signals/state.ts";
 import { entryFiles } from "~/signals/state.ts";
+import { flip } from "~/utils/flip-record.ts";
 
 export default function Header() {
   return (
     <Card>
       <div class="w-full flex items-center justify-between">
-        <div class="flex items-center">
+        <div class="flex flex-wrap items-center">
           {labels.value.map((label) => (
             <div class="border-r border-border px-2" key={label}>
               {label} ({labelMap.value[label]?.length ?? 0})
@@ -62,7 +63,7 @@ export default function Header() {
                 if (!file) return;
                 const text = new TextDecoder().decode(await file.arrayBuffer());
                 const json = JSON.parse(text);
-                labelled.value = json;
+                labelled.value = flip(json);
               }
             }}
           >
@@ -77,7 +78,7 @@ export default function Header() {
                     await input.files[0].arrayBuffer(),
                   );
                   const json = JSON.parse(text);
-                  labelled.value = json;
+                  labelled.value = flip(json);
                 });
                 input.click();
               }}
