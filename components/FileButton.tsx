@@ -1,7 +1,7 @@
 import { useComputed, useSignalEffect } from "@preact/signals";
 import { useRef } from "preact/hooks";
 import { cursorIdx, labelled } from "~/signals/state.ts";
-import Stoplight from "~/components/Stoplight.tsx";
+import LabelCount from "~/components/LabelCount.tsx";
 import { join } from "~/utils/class-join.ts";
 
 interface FileButtonProps {
@@ -27,11 +27,7 @@ export default function FileButton({ entry, idx }: FileButtonProps) {
       onClick={() => cursorIdx.value = idx}
     >
       <p>{flag.value ? <b>{entry}</b> : entry}</p>
-      {label.value && (
-        <Stoplight variant={label.value as "bug" | "idk" | "pass" /* TODO */}>
-          {label.value}
-        </Stoplight>
-      )}
+      {label.value && label.value}
     </button>
   );
 }

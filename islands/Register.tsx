@@ -1,10 +1,16 @@
 import { useSignalEffect } from "@preact/signals";
-import { labels, setLabel } from "~/signals/state.ts";
-import { labelled } from "~/signals/state.ts";
-import { currentFile, cursorKeyIdx } from "~/signals/state.ts";
+import { useEffect } from "preact/hooks";
+import { labels, manifest, setLabel } from "~/signals/state.ts";
+import { currentFile } from "~/signals/state.ts";
 import { goNext, goPrev } from "~/signals/state.ts";
 
 export function Register() {
+  useEffect(() => {
+    const stored = localStorage.getItem("recent-manifest");
+    if (!stored) return;
+    manifest.value = JSON.parse(stored);
+    console.log("auto loaded recent manifest from localStorage");
+  }, []);
   useSignalEffect(() => {
     document.addEventListener("keydown", listener);
     return () => document.removeEventListener("keydown", listener);

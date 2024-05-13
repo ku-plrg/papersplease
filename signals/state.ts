@@ -3,49 +3,72 @@ import { autoNextOption } from "./option.ts";
 
 export type FileType = "plaintext" | "javascript";
 type FileView = [string, { type: FileType }];
+interface LabelInfo {
+  backgroundColor?: string;
+}
 interface Manifest {
-  type: "category";
-  category: Record<string, string[]>;
+  entries: Record<string, string[]>;
+  labelled: Record<string, string[]>;
   files: FileView[];
-  labels: string[];
+  labels: Record<string, LabelInfo>;
 }
 const INIT_MANIFEST = {
-  type: "category",
-  category: {},
+  entries: {},
+  labelled: {},
   files: [],
-  labels: [],
+  labels: {},
 } satisfies Manifest;
 export const manifest = signal<Manifest>(INIT_MANIFEST);
 export const viewFiles = computed<FileView[]>(() => manifest.value.files);
-export const manifestLabels = computed<string[]>(() => manifest.value.labels);
-export const addedLabels = signal<string[]>([]);
-export const labels = computed<string[]>(() => Object.keys(labelMap.value));
 
-export const entryKeys = computed(() => Object.keys(manifest.value.category));
+export const entryKeys = computed(() => Object.keys(manifest.value.entries));
 export const entryFiles = computed(() =>
-  Object.values(manifest.value.category).flat()
+  Object.values(manifest.value.entries).flat()
 );
 
 export const cursorKey = signal<string | undefined>(undefined);
 export const cursorIdx = signal<number | undefined>(undefined);
 export const cursorFiles = computed<string[]>(() =>
-  cursorKey.value != null ? manifest.value.category[cursorKey.value] : []
+  cursorKey.value != null ? manifest.value.entries[cursorKey.value] : []
 );
 export const cursorKeyIdx = computed<number | undefined>(() =>
   entryKeys.value.findIndex((key) => key === cursorKey.value)
 );
 
+export const labelCursorKey = signal<string | undefined>(undefined);
+
 export const currentFile = computed(() =>
   cursorIdx.value != null ? cursorFiles.value[cursorIdx.value] : undefined
 );
 
-export const labelled = signal<Record<string, string>>({});
+export const manifestLabels = computed<string[]>(() =>
+  Object.keys(manifest.value.labels)
+);
+export const addedLabels = signal<string[]>([]);
+export const manifestLabelMap = computed(() => manifest.value.labelled);
+export const manifestLabelled = computed<Record<string, string>>(() =>
+  Object.fromEntries(
+    Object.entries(manifestLabelMap.value).flatMap(([tag, entries]) =>
+      entries.map((e) => [e, tag])
+    ),
+  )
+);
+export const updatedLabelled = signal<Record<string, string>>({});
+export const labelled = computed(() => ({
+  ...manifestLabelled.value,
+  ...updatedLabelled.value,
+}));
 export const labelMap = computed(() =>
   Object.fromEntries(
     Object.entries(
       Object.groupBy(Object.entries(labelled.value), ([_, label]) => label),
-    ).map(([key, vs]) => [key, vs?.map((p) => p[0])]),
+    ).map(([key, vs]) => [key, vs?.map((p) => p[0]) ?? []]),
   )
+);
+export const labels = computed<string[]>(
+  () => [
+    ...new Set([...Object.keys(manifestLabelMap.value), ...addedLabels.value]),
+  ],
 );
 
 effect(() => {
@@ -80,9 +103,21 @@ export function goNext() {
 
 export function setLabel(label: string) {
   if (currentFile.value == null) return;
-  labelled.value = {
-    ...labelled.value,
+  updatedLabelled.value = {
+    ...updatedLabelled.value,
     [currentFile.value]: label,
   };
   if (autoNextOption.value) goNext();
+}
+
+export function buildManifest() {
+  return {
+    entries: manifest.value.entries,
+    files: manifest.value.files,
+    labels: {
+      ...manifest.value.labels,
+      ...Object.fromEntries(addedLabels.value.map((k) => [k, {}])),
+    },
+    labelled: labelMap.value,
+  } satisfies Manifest;
 }

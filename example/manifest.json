@@ -1,25 +1,49 @@
 {
-  "type": "category",
-  "category": {
+  "entries": {
     "some category 1": [
       "./dir1",
-      "./dir2",
-      "./dir3"
+      "./dir2"
     ],
     "some category 2": [
       "./dir4",
       "./dir5"
+    ],
+    "Some category 3": [
+      "./dir3"
     ]
+  },
+  "labelled": {
+    "some label 1": [
+      "./dir1",
+      "./dir3"
+    ]
+  },
+  "labels": {
+    "some label 1": {
+      "backgroundColor": "#f00"
+    }
   },
   "files": [
     [
-      "a.txt",
+      "minified.js",
       {
-        "type": "plaintext"
+        "type": "javascript"
       }
     ],
     [
-      "b.txt",
+      "original.js",
+      {
+        "type": "javascript"
+      }
+    ],
+    [
+      "injected.js",
+      {
+        "type": "javascript"
+      }
+    ],
+    [
+      "reason",
       {
         "type": "plaintext"
       }

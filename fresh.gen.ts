@@ -6,9 +6,9 @@ import * as $_app from "./routes/_app.tsx";
 import * as $api_file_path_ from "./routes/api/file/[...path].ts";
 import * as $api_manifest from "./routes/api/manifest.ts";
 import * as $index from "./routes/index.tsx";
+import * as $ExplorerPanel from "./islands/ExplorerPanel.tsx";
 import * as $Header from "./islands/Header.tsx";
 import * as $PapersPanel from "./islands/PapersPanel.tsx";
-import * as $PrimaryPanel from "./islands/PrimaryPanel.tsx";
 import * as $Register from "./islands/Register.tsx";
 import * as $ViewPanel from "./islands/ViewPanel.tsx";
 import * as $ViewSection from "./islands/ViewSection.tsx";
@@ -22,9 +22,9 @@ const manifest = {
     "./routes/index.tsx": $index,
   },
   islands: {
+    "./islands/ExplorerPanel.tsx": $ExplorerPanel,
     "./islands/Header.tsx": $Header,
     "./islands/PapersPanel.tsx": $PapersPanel,
-    "./islands/PrimaryPanel.tsx": $PrimaryPanel,
     "./islands/Register.tsx": $Register,
     "./islands/ViewPanel.tsx": $ViewPanel,
     "./islands/ViewSection.tsx": $ViewSection,

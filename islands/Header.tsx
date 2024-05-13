@@ -1,8 +1,14 @@
 import Card from "~/components/Card.tsx";
-import { Download, Upload } from "lucide-preact";
-import { labelled, labelMap, labels, manifest } from "~/signals/state.ts";
+import { Download, RefreshCcw, Upload } from "lucide-preact";
+import {
+  buildManifest,
+  labelled,
+  labelMap,
+  labels,
+  manifest,
+  updatedLabelled,
+} from "~/signals/state.ts";
 import { entryFiles } from "~/signals/state.ts";
-import { flip } from "~/utils/flip-record.ts";
 
 export default function Header() {
   return (
@@ -21,6 +27,19 @@ export default function Header() {
           </div>
         </div>
         <div class="flex gap-4">
+          <div>
+            <button
+              class="flex gap-2 hover:bg-muted p-2 rounded-md"
+              onClick={() => {
+                localStorage.setItem(
+                  "recent-manifest",
+                  JSON.stringify(buildManifest()),
+                );
+              }}
+            >
+              <RefreshCcw />
+            </button>
+          </div>
           <div
             onDrop={async (ev) => {
               ev.preventDefault();
@@ -54,54 +73,21 @@ export default function Header() {
               <span>upload manifest</span>
             </button>
           </div>
-          <div
-            onDrop={async (ev) => {
-              ev.preventDefault();
-              if (ev.dataTransfer?.items) {
-                const item = [...ev.dataTransfer.items][0];
-                const file = item.getAsFile();
-                if (!file) return;
-                const text = new TextDecoder().decode(await file.arrayBuffer());
-                const json = JSON.parse(text);
-                labelled.value = flip(json);
-              }
-            }}
-          >
-            <button
-              class="flex gap-2 hover:bg-muted p-2 rounded-md"
-              onClick={() => {
-                const input = document.createElement("input");
-                input.type = "file";
-                input.addEventListener("change", async () => {
-                  if (!input.files) return;
-                  const text = new TextDecoder().decode(
-                    await input.files[0].arrayBuffer(),
-                  );
-                  const json = JSON.parse(text);
-                  labelled.value = flip(json);
-                });
-                input.click();
-              }}
-            >
-              <Upload />
-              <span>upload label</span>
-            </button>
-          </div>
           <div>
             <button
               class="flex gap-2 hover:bg-muted p-2 rounded-md"
               onClick={() => {
                 const href = URL.createObjectURL(
-                  new Blob([JSON.stringify(labelMap.value, null, 2)]),
+                  new Blob([JSON.stringify(buildManifest(), null, 2)]),
                 );
                 const a = document.createElement("a");
                 a.href = href;
-                a.download = "label.json";
+                a.download = "manifest.json";
                 a.click();
               }}
             >
               <Download />
-              <span>download label</span>
+              <span>download manifest</span>
             </button>
           </div>
         </div>
