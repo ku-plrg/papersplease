@@ -25,21 +25,83 @@ export const entryKeys = computed(() => Object.keys(manifest.value.entries));
 export const entryFiles = computed(() =>
   Object.values(manifest.value.entries).flat()
 );
-
-export const cursorKey = signal<string | undefined>(undefined);
-export const cursorIdx = signal<number | undefined>(undefined);
-export const cursorFiles = computed<string[]>(() =>
-  cursorKey.value != null ? manifest.value.entries[cursorKey.value] : []
-);
-export const cursorKeyIdx = computed<number | undefined>(() =>
-  entryKeys.value.findIndex((key) => key === cursorKey.value)
+export const entries = computed(() =>
+  Object.entries(manifest.value.entries).flatMap(([k, vs]) =>
+    vs.map((v) => [k, v])
+  )
 );
 
-export const labelCursorKey = signal<string | undefined>(undefined);
+export const viewType = signal<"category" | "label">("category");
 
-export const currentFile = computed(() =>
-  cursorIdx.value != null ? cursorFiles.value[cursorIdx.value] : undefined
+export const currentEntry = signal<string | undefined>(undefined);
+export const listCursorKey = computed<string | undefined>(() =>
+  entries.value.find(([k, v]) => v == currentEntry.value)?.[0]
 );
+export const listCursorIdx = computed<number | undefined>(() => {
+  if (!listCursorKey.value) return;
+  return manifest.value.entries[listCursorKey.value].findIndex((v) =>
+    v == currentEntry.value
+  );
+});
+export const listPrevEntry = computed<string | undefined>(() => {
+  if (!listCursorKey.value || listCursorIdx.value == null) return;
+  const currKeyIdx = entryKeys.value.findIndex((k) => listCursorKey.value == k);
+  if (listCursorIdx.value == 0) {
+    if (currKeyIdx <= 0) return;
+    const prevKey = entryKeys.value[currKeyIdx - 1];
+    return manifest.value.entries[prevKey].at(-1);
+  }
+  return manifest.value
+    .entries[listCursorKey.value][Math.max(listCursorIdx.value - 1, 0)];
+});
+export const listNextEntry = computed<string | undefined>(() => {
+  if (!listCursorKey.value || listCursorIdx.value == null) return;
+  const currKeyIdx = entryKeys.value.findIndex((k) => listCursorKey.value == k);
+  const listCursorEntries = manifest.value.entries[listCursorKey.value];
+  if (listCursorIdx.value == listCursorEntries.length - 1) {
+    if (currKeyIdx == entryKeys.value.length - 1) return;
+    const nextKey = entryKeys.value[currKeyIdx + 1];
+    return manifest.value.entries[nextKey][0];
+  }
+  return listCursorEntries[
+    Math.min(listCursorIdx.value + 1, listCursorEntries.length - 1)
+  ];
+});
+
+export const labelCursorKey = computed<string | undefined>(() => {
+  if (!currentEntry.value) return;
+  return labelled.value[currentEntry.value];
+});
+export const labelCursorIdx = computed<number | undefined>(() => {
+  if (!labelCursorKey.value) return;
+  return labelMap.value[labelCursorKey.value].findIndex((v) =>
+    v === currentEntry.value
+  );
+});
+export const labelPrevEntry = computed<string | undefined>(() => {
+  if (!labelCursorKey.value || labelCursorIdx.value == null) return;
+  const currKeyIdx = labels.value.findIndex((k) => labelCursorKey.value == k);
+  if (labelCursorIdx.value == 0) {
+    if (currKeyIdx <= 0) return;
+    const prevKey = labels.value[currKeyIdx - 1];
+    return labelMap.value[prevKey].at(-1);
+  }
+  return labelMap
+    .value[labelCursorKey.value][Math.max(labelCursorIdx.value - 1, 0)];
+});
+export const labelNextEntry = computed<string | undefined>(() => {
+  if (!labelCursorKey.value || labelCursorIdx.value == null) return;
+  const currKeyIdx = labels.value.findIndex((k) => labelCursorKey.value == k);
+  const listCursorEntries = labelMap.value[labelCursorKey.value];
+  if (labelCursorIdx.value == listCursorEntries.length - 1) {
+    if (currKeyIdx == labels.value.length - 1) return;
+    const nextKey = labels.value[currKeyIdx + 1];
+    return labelMap.value[nextKey][0];
+  }
+  return listCursorEntries[
+    Math.min(labelCursorIdx.value + 1, listCursorEntries.length - 1)
+  ];
+});
 
 export const manifestLabels = computed<string[]>(() =>
   Object.keys(manifest.value.labels)
@@ -71,43 +133,34 @@ export const labels = computed<string[]>(
   ],
 );
 
-effect(() => {
-  // initialize cursor when cursorKey changed
-  if (cursorFiles.value.length > 0) cursorIdx.value = 0;
-});
-
 export function goPrev() {
-  if (cursorKey.value == null || cursorIdx.value == null) return;
-  if (cursorIdx.value === 0) {
-    const prevKeyIdx = cursorKeyIdx.value! - 1;
-    if (prevKeyIdx < 0) return;
-    cursorKey.value = entryKeys.value[prevKeyIdx];
-    cursorIdx.value = cursorFiles.value.length - 1;
-    return;
+  switch (viewType.value) {
+    case "category":
+      return currentEntry.value = listPrevEntry.value ?? currentEntry.value;
+    case "label": {
+      return currentEntry.value = labelPrevEntry.value ?? currentEntry.value;
+    }
   }
-  return cursorIdx.value = Math.max(cursorIdx.value - 1, 0);
 }
 
 export function goNext() {
-  if (cursorKey.value == null || cursorIdx.value == null) return;
-  if (cursorIdx.value === cursorFiles.value.length - 1) {
-    const nextKeyIdx = cursorKeyIdx.value! + 1;
-    if (nextKeyIdx >= entryKeys.value.length) return;
-    return cursorKey.value = entryKeys.value[nextKeyIdx];
+  switch (viewType.value) {
+    case "category":
+      return currentEntry.value = listNextEntry.value ?? currentEntry.value;
+    case "label":
+      return currentEntry.value = labelNextEntry.value ?? currentEntry.value;
   }
-  return cursorIdx.value = Math.min(
-    cursorIdx.value + 1,
-    entryFiles.value.length,
-  );
 }
 
 export function setLabel(label: string) {
-  if (currentFile.value == null) return;
+  if (currentEntry.value == null) return;
+  // save entry for when updating label on label view
+  const entry = currentEntry.value;
+  if (autoNextOption.value) goNext();
   updatedLabelled.value = {
     ...updatedLabelled.value,
-    [currentFile.value]: label,
+    [entry]: label,
   };
-  if (autoNextOption.value) goNext();
 }
 
 export function buildManifest() {

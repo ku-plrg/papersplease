@@ -1,20 +1,25 @@
 import { ReadonlySignal, useComputed } from "@preact/signals";
 import { JSX } from "preact";
-import { cursorKey } from "~/signals/state.ts";
 import { join } from "~/utils/class-join.ts";
 
 interface CollapsibleProps extends JSX.HTMLAttributes<HTMLDetailsElement> {
-  keyName: string;
   summary: string;
+  open: ReadonlySignal<boolean>;
   unlabelledCount?: ReadonlySignal<number>;
   count: number;
 }
 
 export default function Collapsible(
-  { onToggle, keyName, unlabelledCount, count, summary, children, ...props }:
-    CollapsibleProps,
+  {
+    onToggle,
+    unlabelledCount,
+    open,
+    count,
+    summary,
+    children,
+    ...props
+  }: CollapsibleProps,
 ) {
-  const open = useComputed(() => cursorKey.value === keyName);
   return (
     <details {...props} open={open} onToggle={onToggle}>
       <summary class="hover:bg-muted p-2 px-3 rounded-md cursor-pointer flex justify-between sticky top-0">
@@ -23,10 +28,10 @@ export default function Collapsible(
         </p>
         {unlabelledCount
           ? (
-            <p class="ml-2 rounded-full opacity-50 border self-start flex overflow-hidden flex-shrink-0">
+            <p class="ml-2 rounded-full border border-border self-start flex overflow-hidden flex-shrink-0">
               <div
                 class={join(
-                  "px-2 border-r",
+                  "px-2 border-r border-border",
                   unlabelledCount.value ? "bg-orange-500" : "bg-green-500",
                 )}
               >
@@ -36,7 +41,7 @@ export default function Collapsible(
             </p>
           )
           : (
-            <p class="ml-2 px-2 rounded-full opacity-50 border self-start">
+            <p class="ml-2 px-2 rounded-full border border-border self-start">
               {count}
             </p>
           )}

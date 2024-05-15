@@ -1,7 +1,6 @@
 import { useSignalEffect } from "@preact/signals";
 import { useEffect } from "preact/hooks";
-import { labels, manifest, setLabel } from "~/signals/state.ts";
-import { currentFile } from "~/signals/state.ts";
+import { currentEntry, labels, manifest, setLabel } from "~/signals/state.ts";
 import { goNext, goPrev } from "~/signals/state.ts";
 
 export function Register() {
@@ -28,7 +27,7 @@ export function Register() {
     document.addEventListener("keydown", listener);
     return () => document.removeEventListener("keydown", listener);
     function listener(ev: KeyboardEvent) {
-      if (currentFile.value == null) return;
+      if (currentEntry.value == null) return;
       if (document.activeElement?.tagName == "INPUT") return;
       switch (ev.key) {
         case "q":

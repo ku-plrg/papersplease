@@ -2,7 +2,12 @@ import type { JSX } from "preact";
 import { PaperButton } from "../components/PaperButton.tsx";
 import Card from "~/components/Card.tsx";
 import { join } from "~/utils/class-join.ts";
-import { addedLabels, currentFile, labels, setLabel } from "~/signals/state.ts";
+import {
+  addedLabels,
+  currentEntry,
+  labels,
+  setLabel,
+} from "~/signals/state.ts";
 import { useComputed, useSignal } from "@preact/signals";
 import Checkbox from "~/components/Checkbox.tsx";
 import { autoNextOption } from "~/signals/option.ts";
@@ -10,7 +15,7 @@ import Input from "~/components/Input.tsx";
 
 export default function PapersPanel(props: JSX.HTMLAttributes<HTMLDivElement>) {
   const tagValue = useSignal("");
-  const disabled = useComputed(() => currentFile.value == null);
+  const disabled = useComputed(() => currentEntry.value == null);
   return (
     <Card class={join("p-4 flex flex-col gap-4", props.class)}>
       <div class="flex justify-between">
