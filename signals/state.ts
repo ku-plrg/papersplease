@@ -129,7 +129,11 @@ export const labelMap = computed(() =>
 );
 export const labels = computed<string[]>(
   () => [
-    ...new Set([...Object.keys(manifestLabelMap.value), ...addedLabels.value]),
+    ...new Set([
+      ...manifestLabels.value,
+      ...Object.keys(manifestLabelMap.value),
+      ...addedLabels.value,
+    ]),
   ],
 );
 
