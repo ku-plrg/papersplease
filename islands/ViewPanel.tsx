@@ -8,8 +8,13 @@ interface PanelProps {
   lang: FileType;
 }
 
+interface Entry {
+  code: string;
+  html: string;
+}
+
 export default function ViewPanel({ filename, lang }: PanelProps) {
-  const body = useSignal("");
+  const entry = useSignal<Entry | null>(null);
   useSignalEffect(() =>
     void (async () => {
       if (!currentEntry.value) return;
@@ -18,22 +23,32 @@ export default function ViewPanel({ filename, lang }: PanelProps) {
       );
       if (res.ok) {
         const json = await res.json();
-        body.value = await codeToHtml(json.text, {
-          lang,
-          theme: "vitesse-black",
-        });
+        entry.value = {
+          code: json.text,
+          html: await codeToHtml(json.text, {
+            lang,
+            theme: "vitesse-black",
+          }),
+        };
       }
     })()
   );
-  if (!currentEntry.value) {
+  if (!currentEntry.value || !entry.value) {
     return <Card class="h-full">No content</Card>;
   }
   return (
     <Card>
-      <div>{filename}</div>
+      <div class="flex">
+        <div class="min-w-24">{filename}</div>
+        <button
+          onClick={() => navigator.clipboard.writeText(entry.value!.code)}
+        >
+          Copy Code
+        </button>
+      </div>
       <div
         class="overflow-auto"
-        dangerouslySetInnerHTML={{ __html: body.value }}
+        dangerouslySetInnerHTML={{ __html: entry.value.html }}
       />
     </Card>
   );
