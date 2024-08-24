@@ -7,26 +7,23 @@ manual labelling tool
 1. `cd ./example && deno run -A --watch=../routes/,../static ../dev.ts`
 2. Click `Upload manifest` button and select `./example/manifest.json`
 
-## Installation (TODO; not working currently)
+## Installation
 
-A current version of the Deno CLI is required to install and host
-`papersplease`. To install, run the following command:
+1. Fetch the repository.
 
-```
-deno run -A -r https://papersplease.deno.dev/install
-```
-
-You will be prompted for a location to install `papersplease`.
-
-Once the installation is complete, change to the installation directory and run
-the following to start the `papersplease` server:
-
-```
-deno task start
+```sh
+git clone https://github.com/ku-plrg/papersplease
 ```
 
-You can also upgrade your installation to the latest version by performing:
+2. Register install script with `deno install` feature.
 
+```sh
+cd papersplease && deno install -n ppz -A ./install.ts --import-map=./deno.json
 ```
-deno task upgrade
+
+3. Now you can use paperplease with name `ppz`. Locate any directory you want
+   and run `ppz`.
+
+```sh
+cd some-directory && ppz
 ```
