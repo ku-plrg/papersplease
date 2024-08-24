@@ -21,11 +21,5 @@
   "tailwindCSS.experimental.classRegex": [
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-  ],
-  "[html]": {
-    "editor.defaultFormatter": "vscode.html-language-features"
-  },
-  "files.watcherExclude": {
-    "**/target": true
-  }
+  ]
 }
